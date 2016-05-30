@@ -14,6 +14,15 @@ You will develop a single-page application featuring a map of your neighborhood 
 * Google Maps API
 
 <!-- * TODO: Some other -->
+<!-- Helpful Resources
+None of these are required, but they may be helpful.
+* Foursquare API
+* MediaWikiAPI for Wikipedia
+* Google Maps Street View Service
+* Google Maps
+* Project 5 Overview WebCast
+* Knockout JS Tutorials
+* Todo MVC Knockout Example -->
 
 ## Running the page
 <!-- TODO: Live site [link here](http://desinni.github.io/TO-DO) -->
