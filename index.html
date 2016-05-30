@@ -3,16 +3,32 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Neighborhood Map |</title>
+		<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:300' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
 		<link rel="stylesheet" href="css/main.css" />
 	</head>
 	<body>
 
-		<header class="header"></header>
+		<header class="header">
+			<i class="fa fa-bars menu-icon" aria-hidden="true"></i>
+		</header>
 
-		<menu class="menu"></menu>
+		<menu>
+			<h2 class="menu__header text-center" style="padding-top: 10px;">Place Name</h2>
+			<form class="menu__filter form-inline">
+				<input type="text" class="col-sm-8 menu__filter__input form-control" id="filter" />
+				<button type="submit" class="col-sm-4 menu__filter__filter-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+			</form>
+			<ul class="menu-list">
+				<li class="menu-list__item">List Item 1</li>
+				<li class="menu-list__item">List Item 2</li>
+				<li class="menu-list__item">List Item 3</li>
+				<li class="menu-list__item">List Item 4</li>
+			</ul>
+		</menu>
 
-		<div class="container map">
+		<div class="map">
 
 		</div>
 
