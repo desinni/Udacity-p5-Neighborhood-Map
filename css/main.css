@@ -1,49 +1,96 @@
 /** { border: 1px solid red; }*/
 
+html,
 body {
-  background-color: #212121;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
   color: #d6d6d4;
   font-size: 16px;
   font-family: 'Roboto Slab', serif;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+header,
+nav,
+div {
+  box-sizing: border-box;
 }
 
 .header {
   -webkit-box-shadow: 0 2px 4px #161616;
   -moz-box-shadow: 0 2px 4px #161616;
   box-shadow: 0 2px 4px #161616;
-  padding: 20px 0 20px 40px;
+  display: inline-flex;
+  padding-left: 40px;
+  height: 8%;
+  z-index: 5;
 }
 
-.header .menu-icon {
+.menu-btn {
+  border: none;
+  margin: auto 0;
+  background-color: inherit;
+}
+
+.menu-icon {
   color: #4f87c7;
   font-size: 30px;
 }
 
-menu {
-  background-color: #000;
+.menu-icon:hover,
+.menu-icon:active {
+  color: #212121;
+}
+
+nav {
+  background-color: #212121;
   width: 400px;
+  height: 100%;
   padding-left: 5px;
 }
 
-menu .menu__filter {
+nav .nav__filter {
   margin-bottom: 20px;
 }
 
-menu .menu__filter .menu__filter__input {
+nav .nav__filter .nav__filter__input {
   color: #4f87c7;
 }
 
-menu .menu__filter .menu__filter__filter-btn {
+nav .nav__filter .nav__filter__filter-btn {
   color: #fff;
   background-color: #4f87c7;
   border: 0.5px solid #4f87c7;
 }
 
-menu .menu-list {
+nav .nav__list {
   list-style: none;
   padding: 15px 10px 10px;
 }
 
-menu .menu-list .menu-list__item {
+nav .nav__item {
+  box-sizing: border-box;
+  display: block;
   padding-top: 15px;
+}
+
+nav .nav__item:hover {
+  color: #4f87c7;
+}
+
+.main {
+  position: relative;
+  padding: 0;
+}
+
+#map {
+  position: relative;
+  height: 92%;
+  width: 100%;
+  z-index: 2;
 }

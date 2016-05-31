@@ -2,7 +2,8 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Neighborhood Map |</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Neighborhood Map | London</title>
 		<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:300' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
@@ -10,27 +11,41 @@
 	</head>
 	<body>
 
-		<header class="header">
-			<i class="fa fa-bars menu-icon" aria-hidden="true"></i>
-		</header>
-
-		<menu>
-			<h2 class="menu__header text-center" style="padding-top: 10px;">Place Name</h2>
-			<form class="menu__filter form-inline">
-				<input type="text" class="col-sm-8 menu__filter__input form-control" id="filter" />
-				<button type="submit" class="col-sm-4 menu__filter__filter-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+		<nav id="drawer" class="nav col-sm-3">
+			<h2 class="nav__header text-center" style="padding-top: 10px;">London, UK</h2>
+			<form class="nav__filter form-inline">
+				<input type="text" class="col-sm-8 nav__filter__input form-control" id="filter" />
+				<button type="submit" class="col-sm-4 nav__filter__filter-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
 			</form>
-			<ul class="menu-list">
-				<li class="menu-list__item">List Item 1</li>
-				<li class="menu-list__item">List Item 2</li>
-				<li class="menu-list__item">List Item 3</li>
-				<li class="menu-list__item">List Item 4</li>
-			</ul>
-		</menu>
+      <ul class="nav__list">
+        <li class="nav__item">List Item 1</li>
+        <li class="nav__item">List Item 2</li>
+        <li class="nav__item">List Item 3</li>
+        <li class="nav__item">List Item 4</li>
+      </ul>
+    </nav>
 
-		<div class="map">
+		<div class="col-sm-9 main" style="height: 100%;">
+			<div class="header col-sm-12">
+				<button class="menu-btn">
+					<i class="fa fa-bars menu-icon" aria-hidden="true"></i>
+				</button>
+			</div>
 
+			<div id="map" class="col-sm-12"></div>
 		</div>
+
+		<script>
+		 var map;
+		 function initMap() {
+			 map = new google.maps.Map(document.getElementById('map'), {
+				 center: {lat: 51.515083, lng: -0.122462},
+				 zoom: 12
+			 });
+		 }
+		</script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNGEZl6rYqobrTonsMhnYhnnxl3rC07bk&callback=initMap"
+		async></script>
 
 		<script src="js/lib/jquery.js"></script>
 		<script src="js/lib/knockout-3.2.0.js"></script>
