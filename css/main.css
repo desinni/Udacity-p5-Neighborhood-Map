@@ -29,6 +29,7 @@ div {
   padding-left: 40px;
   height: 8%;
   z-index: 5;
+  width: 100%;
 }
 
 .menu-btn {
@@ -46,6 +47,19 @@ div {
 .menu-icon:active {
   color: #212121;
 }
+
+.menu-btn:focus {
+  outline: 0;
+}
+
+.menu__is-closed {
+  left: -400px;
+  display: none;
+}
+/*
+.display-big {
+  width: 100%;
+}*/
 
 nav {
   background-color: #212121;
@@ -81,6 +95,7 @@ nav .nav__item {
 
 nav .nav__item:hover {
   color: #4f87c7;
+  cursor: pointer;
 }
 
 .main {
