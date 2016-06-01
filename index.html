@@ -33,33 +33,62 @@
 			<div id="map" class="col-sm-12"></div>
 		</div>
 
+		<!-- Google Maps API and Places library. -->
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNGEZl6rYqobrTonsMhnYhnnxl3rC07bk&libraries=places&callback=initMap"></script>
+
 		<script>
 			var map;
 			var markers = [];
-			var i = 5;
+			var marker;
 			function initMap() {
 				map = new google.maps.Map(document.getElementById('map'), {
 					center: {lat: 51.515083, lng: -0.122462},
 					zoom: 13
 				});
-				initialPlaces.forEach(function(place){
-					window.setTimeout(function() {
-	          markers.push(new google.maps.Marker({
-	            position: {lat: place.lat, lng: place.lng},
-							title: place.title,
-	            map: map,
-	            animation: google.maps.Animation.DROP
-	          }));
-	        }, i++ * 200);
-				});
-				markers.forEach(function(marker){
-					marker.setMap(map);
+// NEW NEW START START
+				var infowindow = new google.maps.InfoWindow();
+				var service = new google.maps.places.PlacesService(map);
+
+				for (var i = 0; i < initialPlaces.length; i++){
+					marker = new google.maps.Marker({
+						position: {lat: initialPlaces[i].lat, lng: initialPlaces[i].lng},
+						title: initialPlaces[i].title,
+						id: initialPlaces[i].placeId,
+            map: map,
+            animation: google.maps.Animation.DROP
+					});
+					markers.push(marker);
+				}
+
+				markers.forEach(function(location){
+					service.getDetails({
+		        placeId: location.id
+	        }, function(place, status) {
+          	if (status === google.maps.places.PlacesServiceStatus.OK) {
+							google.maps.event.addListener(location, 'click', function() {
+	              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+	                'Place ID: ' + place.place_id + '<br>' +
+	                place.formatted_address + '</div>');
+	              infowindow.open(map, this);
+	            });
+						}
+					});
 				});
 			}
-		</script>
+// NEW NEW END END
 
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNGEZl6rYqobrTonsMhnYhnnxl3rC07bk&callback=initMap"
-		async></script>
+				// initialPlaces.forEach(function(place){
+				// 	window.setTimeout(function() {
+	      //     markers.push(new google.maps.Marker({
+	      //       position: {lat: place.lat, lng: place.lng},
+				// 			title: place.title,
+	      //       map: map,
+	      //       animation: google.maps.Animation.DROP
+	      //     }));
+	      //   }, i++ * 200);
+				// });
+			// }
+		</script>
 
 		<script src="js/lib/jquery.js"></script>
 		<script src="js/lib/knockout-3.2.0.js"></script>
