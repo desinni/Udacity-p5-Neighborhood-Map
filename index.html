@@ -45,7 +45,7 @@
 					center: {lat: 51.515083, lng: -0.122462},
 					zoom: 13
 				});
-// NEW NEW START START
+				
 				var infowindow = new google.maps.InfoWindow();
 				var service = new google.maps.places.PlacesService(map);
 
@@ -70,8 +70,7 @@
 	                place.formatted_address +  '<br />' +
 									'Rating: ' + place.rating + ' / 5 <br />' +
 									'Phone: ' + place.international_phone_number + '</div>' +
-								 	'<div id="foursquare"></div>');
-									// console.log(place.geometry.location.lat() + '!!!');
+									'<div id="foursquare"></div>');
 									addFoursquareContent(place.geometry.location);
 	              infowindow.open(map, this);
 	            });
@@ -80,8 +79,6 @@
 				});
 
 				function addFoursquareContent(place){
-					// var pl = place;
-					// console.log(pl + '!');
 					$.ajax({
 						url: 'https://api.foursquare.com/v2/venues/explore',
 						data: {
@@ -89,9 +86,8 @@
 							client_secret: 'H1EAHQSYMIJCB2UIG1YMNH3SSTGLELGS3KBA20BW0AEJ122L',  // Oh man! You've found a secret! Unfortunately, it's not a very good secret.
 							v: 20160324,
 							m: 'foursquare',
-							limit: 5,
+							limit: 7,
 							ll: place.lat() + ',' + place.lng(),
-							// ll: initialPlaces[4].lat + ',' + initialPlaces[4].lng,  // Search for venue by coordinates.
 							venuePhotos: 1,  // Include photos.
 							sortByDistance: 1  // Sort results by distance.
 						},
@@ -105,26 +101,22 @@
 									group = data.response.groups[group];
 
 									var $foursquare = $('#foursquare');
-									var venueName, venueUrl, venueCategory, venueAddress, venueRating, venuePhoto;
+									var venueName, venueUrl, venueCategory, venueAddress, venueRating, venuePhoto, venueChekinsCount;
 									$foursquare.append('<hr />' + '<strong>Nearby Venues from Foursquare</strong><br />');
 									for (var i = 1; i < group.items.length; i++) {
 										venueName = group.items[i].venue.name;
-										venueUrl = group.items[i].venue.url;
+										venueUrl = group.items[i].venue.canonicalUrl;
 										venueCategory = group.items[i].venue.categories[0].name;
-										if (group.items[i].venue.location.address != undefined) {
-											venueAddress = group.items[i].venue.location.address;
-										} else {
-											venueAddress = group.items[i].venue.location.formattedAddress;
-										}
-									 	venueRating = group.items[i].venue.rating;
-										venuePhoto = '<img src="' + group.items[i].venue.photos.groups[0].items[0].prefix + '500x450' +  group.items[i].venue.photos.groups[0].items[0].suffix + '" alt="" />';
-										// console.log(group.items[i].venue);
-										// console.log(group.items[2].venue.categories[0].shortName);
-										console.log(group.items[i].venue.photos.groups[0].items[0]);
+										venueAddress = group.items[i].venue.location.formattedAddress;
+										venueRating = group.items[i].venue.rating;
+										venuePhoto = '<img src="' + group.items[i].venue.photos.groups[0].items[0].prefix + '500x450' +  group.items[i].venue.photos.groups[0].items[0].suffix + '" alt="' + venueName + '" />';
+										venueChekinsCount = group.items[i].venue.stats.checkinsCount;
+										console.log(group.items[i].venue);
 										$foursquare.append('<div><h4><a href="' + venueUrl + '" target="_blank">' + venueName + '</a></h4><br />' +
 											venueCategory + '<br />' +
 											'Address: ' + venueAddress + '<br />' +
 											'Rating: ' + venueRating + ' / 10 <br />' +
+											'Chekins: ' + venueChekinsCount + '<br />' +
 											venuePhoto +
 											'</div>');
 									}
@@ -133,55 +125,7 @@
 						}
 					});
 				};
-
-				// $.ajax({
-				// 	url: 'https://api.foursquare.com/v2/venues/explore',
-				// 	data: {
-				// 		client_id: 'GYFRUTH4OUDFVOKB41NKCHW4HRIINZYEWISECOHXIILXMGMV',  // You've found a key! Unfortunately, the key you're looking for is in another castle.
-				// 		client_secret: 'H1EAHQSYMIJCB2UIG1YMNH3SSTGLELGS3KBA20BW0AEJ122L',  // Oh man! You've found a secret! Unfortunately, it's not a very good secret.
-				// 		v: 20160324,
-				// 		m: 'foursquare',
-				// 		limit: 1,
-				// 		ll: initialPlaces[4].lat + ',' + initialPlaces[4].lng,  // Search for venue by coordinates.
-				// 		venuePhotos: 1,  // Include photos.
-				// 		sortByDistance: 1  // Sort results by distance.
-				// 	},
-				// 	dataType: 'json'
-				// })
-				// .done(function(data) {
-				// 	if (data.response.groups) {
-				// 		for (var group in data.response.groups) {
-				// 			// Avoid unintentionally iterating over prototype properties.
-				// 			if (data.response.groups.hasOwnProperty(group)) {
-				// 				group = data.response.groups[group];
-				//
-				// 				// for (var i = 0; i < group.items.length; i++) {
-				// 					// console.log(group.items[0].venue);
-				// 					// $('.foursquare').innerText(group.items[0].venue.name);
-				// 					var str = group.items[0].venue.categories[0].shortName;
-				// 					console.log(str);
-				// 					// infowindow.setContent('<div>' + group.items[0].venue.name + '</div>');
-				// 					// info.results.push(group.items[i].venue);
-				// 				// }
-				// 			}
-				// 		}
-				// 	}
-				// });
-
 			}
-// NEW NEW END END
-
-				// initialPlaces.forEach(function(place){
-				// 	window.setTimeout(function() {
-	      //     markers.push(new google.maps.Marker({
-	      //       position: {lat: place.lat, lng: place.lng},
-				// 			title: place.title,
-	      //       map: map,
-	      //       animation: google.maps.Animation.DROP
-	      //     }));
-	      //   }, i++ * 200);
-				// });
-			// }
 		</script>
 
 		<script src="js/lib/jquery.js"></script>
