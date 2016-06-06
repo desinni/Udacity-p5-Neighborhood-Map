@@ -5,7 +5,7 @@ var initialPlaces = [
     title: "The British Museum",
     lat: 51.519360,
     lng: -0.127038,
-    placeId: "ChIJB9OTMDIbdkgRp0JWbQGZsS8"
+    placeId: "ChIJB9OTMDIbdkgRp0JWbQGZsS8",
   },
   {
     title: "London Eye",

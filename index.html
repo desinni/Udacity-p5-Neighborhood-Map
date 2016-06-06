@@ -66,14 +66,95 @@
 	        }, function(place, status) {
           	if (status === google.maps.places.PlacesServiceStatus.OK) {
 							google.maps.event.addListener(location, 'click', function() {
-	              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-	                'Place ID: ' + place.place_id + '<br>' +
-	                place.formatted_address + '</div>');
+	              infowindow.setContent('<div><strong><a href="' + place.website + '" target="_blank">' + place.name + '</a></strong><br>' +
+	                place.formatted_address +  '<br />' +
+									'Rating: ' + place.rating + ' / 5 <br />' +
+									'Phone: ' + place.international_phone_number + '</div>' +
+								 	'<div id="foursquare"></div>');
+									console.log(place.geometry.location);
+									addFoursquareContent(place.geometry.location);
 	              infowindow.open(map, this);
 	            });
 						}
 					});
 				});
+
+				function addFoursquareContent(location){
+					var loc = location;
+					console.log(loc + '!');
+					$.ajax({
+						url: 'https://api.foursquare.com/v2/venues/explore',
+						data: {
+							client_id: 'GYFRUTH4OUDFVOKB41NKCHW4HRIINZYEWISECOHXIILXMGMV',  // You've found a key! Unfortunately, the key you're looking for is in another castle.
+							client_secret: 'H1EAHQSYMIJCB2UIG1YMNH3SSTGLELGS3KBA20BW0AEJ122L',  // Oh man! You've found a secret! Unfortunately, it's not a very good secret.
+							v: 20160324,
+							m: 'foursquare',
+							limit: 5,
+							// ll: loc,
+							ll: initialPlaces[4].lat + ',' + initialPlaces[4].lng,  // Search for venue by coordinates.
+							venuePhotos: 1,  // Include photos.
+							sortByDistance: 1  // Sort results by distance.
+						},
+						dataType: 'json'
+					})
+					.done(function(data) {
+						if (data.response.groups) {
+							for (var group in data.response.groups) {
+								// Avoid unintentionally iterating over prototype properties.
+								if (data.response.groups.hasOwnProperty(group)) {
+									group = data.response.groups[group];
+
+									var $foursquare = $('#foursquare');
+									$foursquare.append('<hr />' + '<strong>Nearby Venues From Foursquare</strong><br />');
+									for (var i = 1; i < group.items.length; i++) {
+										var venueName = group.items[i].venue.name;
+										var venueCategory = group.items[i].venue.categories[0].name;
+										// console.log(group.items);
+										// console.log(group.items[2].venue.categories[0].shortName);
+										$foursquare.append('<div><strong>' + venueName + '</strong><br />' +
+											venueCategory +
+											'</div>');
+									}
+								}
+							}
+						}
+					});
+				};
+
+				// $.ajax({
+				// 	url: 'https://api.foursquare.com/v2/venues/explore',
+				// 	data: {
+				// 		client_id: 'GYFRUTH4OUDFVOKB41NKCHW4HRIINZYEWISECOHXIILXMGMV',  // You've found a key! Unfortunately, the key you're looking for is in another castle.
+				// 		client_secret: 'H1EAHQSYMIJCB2UIG1YMNH3SSTGLELGS3KBA20BW0AEJ122L',  // Oh man! You've found a secret! Unfortunately, it's not a very good secret.
+				// 		v: 20160324,
+				// 		m: 'foursquare',
+				// 		limit: 1,
+				// 		ll: initialPlaces[4].lat + ',' + initialPlaces[4].lng,  // Search for venue by coordinates.
+				// 		venuePhotos: 1,  // Include photos.
+				// 		sortByDistance: 1  // Sort results by distance.
+				// 	},
+				// 	dataType: 'json'
+				// })
+				// .done(function(data) {
+				// 	if (data.response.groups) {
+				// 		for (var group in data.response.groups) {
+				// 			// Avoid unintentionally iterating over prototype properties.
+				// 			if (data.response.groups.hasOwnProperty(group)) {
+				// 				group = data.response.groups[group];
+				//
+				// 				// for (var i = 0; i < group.items.length; i++) {
+				// 					// console.log(group.items[0].venue);
+				// 					// $('.foursquare').innerText(group.items[0].venue.name);
+				// 					var str = group.items[0].venue.categories[0].shortName;
+				// 					console.log(str);
+				// 					// infowindow.setContent('<div>' + group.items[0].venue.name + '</div>');
+				// 					// info.results.push(group.items[i].venue);
+				// 				// }
+				// 			}
+				// 		}
+				// 	}
+				// });
+
 			}
 // NEW NEW END END
 
@@ -92,6 +173,7 @@
 
 		<script src="js/lib/jquery.js"></script>
 		<script src="js/lib/knockout-3.2.0.js"></script>
+		<!-- <script src="js/info-window.js"></script> -->
 		<script src="js/app.js"></script>
 	</body>
 
