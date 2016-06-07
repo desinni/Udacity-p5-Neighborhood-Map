@@ -61,13 +61,21 @@ ko.applyBindings(new ViewModel());
 
 var menuBtn = $('.menu-btn'),
     main = $('.main'),
-    menu = $('#drawer');
+    menu = $('#drawer'),
+    foursquareBtn = $('#showFoursquareInformation');
+    venueInfo = $('#venue-info');
 
 menuBtn.click(function() {
   menu.toggleClass('menu__is-closed');
-  main.toggleClass('col-sm-9');
-  main.toggleClass('col-sm-12');
+  // main.toggleClass('col-sm-9');
+  // main.toggleClass('col-sm-12');
 });
+
+// foursquareBtn.click(function() {
+//   venueInfo.append('<div id="foursquare"></div>');
+//   addFoursquareContent(place.geometry.location);
+// });
+
 
 
 // main1.click(function() {

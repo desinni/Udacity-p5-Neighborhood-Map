@@ -1,7 +1,8 @@
 /** { border: 1px solid red; }*/
 
 html,
-body {
+body,
+ul {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -18,6 +19,19 @@ header,
 nav,
 div {
   box-sizing: border-box;
+}
+
+li {
+  list-style: none;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+.google-result-detail,
+.foursquare-result-detail {
+  margin-top: 10px;
 }
 
 .header {
