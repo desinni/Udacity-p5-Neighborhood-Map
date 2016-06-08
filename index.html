@@ -86,21 +86,25 @@
 			    return null;
 				}
 
+				function bounceMarker(marker){
+					var duration = 1.5;  // Seconds.
+					console.log(marker.id);
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+
+					window.setTimeout(end, duration * 1000);
+
+					function end() {
+						marker.setAnimation(null);
+					}
+				}
+
 				markers.forEach(function(location){
 					service.getDetails({
 		        placeId: location.id
 	        }, function(place, status) {
           	if (status === google.maps.places.PlacesServiceStatus.OK) {
 							google.maps.event.addListener(location, 'click', function() {
-								var duration = 1.5;  // Seconds.
-								console.log(location.id);
-								location.setAnimation(google.maps.Animation.BOUNCE);
-
-								window.setTimeout(end, duration * 1000);
-
-								function end() {
-									location.setAnimation(null);
-								}
+								bounceMarker(location);
 	              infowindow.setContent('<div id="venue-info" class="text-center">' +
 	                '<h2><a href="' + place.website + '" target="_blank">' + place.name + '</a></h2>' +
 	                '<ul class="google-result-details">' +
