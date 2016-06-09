@@ -5,27 +5,58 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Neighborhood Map | London</title>
 		<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:300' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<!-- <link rel="stylesheet" href="css/bootstrap.min.css" /> -->
 		<link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
-		<link rel="stylesheet" href="css/main.css" />
+		<link rel="stylesheet" href="css/style.css" />
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNGEZl6rYqobrTonsMhnYhnnxl3rC07bk&libraries=places">
 		</script>
 	</head>
 
 	<body>
 
-		<nav id="drawer" class="nav col-sm-3">
+		<div id="map"></div>
+
+		<form class='search' data-bind="submit: search">
+			<input class="search-bar" data-bind="value: query" placeholder="Filter results by name or type" autofocus></input>
+			<button class="search-button" type="submit">
+				<i class="fa fa-search fa-2x fa-inverse"></i>
+			</button>
+		</form>
+
+	  <button class="list-toggle" data-bind="click: toggleListDisplay,
+	                                           css: {'small-list-toggle': !displayingList() }">
+	    <i data-bind="css: {'fa-minus-square': displayingList(),
+	                    'fa-plus-square': !displayingList() }" class="fa fa-2x fa-inverse"></i>
+	  </button>
+	  <ul class="filtered-places" data-bind="visible: filteredPlaces().length,
+	                                           foreach: {data: filteredPlaces, as: 'place'},
+	                                           css: {'list-view-hidden': !displayingList()}">
+	    <li class="place" data-bind="click: function() { $root.selectPlace(place); },
+	                                  css: {'chosen-place': $data === $root.chosenPlace()},
+	                                  attr: { id: place.id }">
+	      <div class="place-info">
+	        <h4 data-bind="text: place.name"></h4>
+	        <p data-bind="text: place.vicinity"></p>
+	      </div>
+	    </li>
+	  </ul>
+		  <!-- <div class="no-results" data-bind="visible: filteredPlaces().length === 0,
+		                                       css: {'list-view-hidden': !displayingList()}">
+		    No results matched your search
+		  </div> -->
+
+		<!-- <nav id="drawer" class="nav col-sm-3">
 			<h2 class="nav__header text-center" style="padding-top: 10px;" data-bind="text: city"></h2>
 			<form class="nav__filter form-inline">
 				<input type="text" class="col-sm-8 nav__filter__input form-control" id="filter" />
 				<button type="submit" class="col-sm-4 nav__filter__filter-btn"><i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
-			</form>
+			</form> -->
       <!-- <ul class="nav__list" data-bind="foreach: placeList">
         <li class="nav__item" data-bind="text: title"></li>
       </ul> -->
-    </nav>
+    <!-- </nav> -->
 
-		<div class="col-sm-9 main" style="height: 100%;">
+		<!-- <div class="col-sm-9 main" style="height: 100%;">
 			<div class="header col-sm-12">
 				<button class="menu-btn">
 					<i class="fa fa-bars menu-icon" aria-hidden="true"></i>
@@ -33,7 +64,7 @@
 			</div>
 
 			<div id="map" class="col-sm-12"></div>
-		</div>
+		</div> -->
 
 		<script src="js/lib/jquery.js"></script>
 		<script src="js/lib/knockout-3.2.0.js"></script>

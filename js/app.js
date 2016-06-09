@@ -21,7 +21,8 @@ function appViewModel() {
     london = new google.maps.LatLng(51.514100, -0.119483);
     map = new google.maps.Map(document.getElementById('map'), {
       center: london,
-      zoom: 13
+      zoom: 13,
+      disableDefaultUI: true
     });
     getAllPlaces();
   }
@@ -55,6 +56,8 @@ function appViewModel() {
       results.forEach(function(place) {
         place.marker = createMarker(place);
         // console.log(place.name + ' ' + place.rating + ' || ' + place.types[0] + ' ||| ' + place.vicinity);
+        // console.log('ID ' + place.id);
+        // console.log('GOOGLE ID '  + place.place_id);
 
         // Array to store data from Foursquare API request.
         place.foursquare = ko.observableArray([]);
@@ -175,6 +178,50 @@ function appViewModel() {
   // Value associated with user input from search bar used to filter results.
   self.query = ko.observable('');
 
+
+  // Break the user's search query into separate words and make them lowercase
+  // for comparison between the places in allPlaces.
+  self.searchTerms = ko.computed(function () {
+      return self.query().toLowerCase().split(' ');
+  });
+
+  /*
+   * Takes user's input in search bar and compares each word against the name
+   * of each place in allPlaces.  Also compares against the place's type
+   * (bar, restaurant, etc.).  All places are initially removed from the
+   * filteredPlaces array then added back if the comparison between name or
+   * type returns true.
+   */
+  self.search = function () {
+    self.chosenPlace(null);
+    infowindow.setMap(null);
+    self.allPlaces().forEach(function (place) {
+      place.isInFilteredList(false);
+      place.marker.setMap(null);
+    });
+    self.searchTerms().forEach(function (word) {
+      self.allPlaces().forEach(function (place) {
+        // If search term is in the place's name or if the search term
+        // is one of the place's types, that is a match.
+        if (place.name.toLowerCase().indexOf(word) !== -1 || place.types.indexOf(word) !== -1) {
+          place.isInFilteredList(true);
+          place.marker.setMap(map);
+        }
+      });
+    });
+  };
+
+  function bounceMarker(marker){
+    var duration = 1.5;  // Seconds.
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+
+    window.setTimeout(end, duration * 1000);
+
+    function end() {
+      marker.setAnimation(null);
+    }
+  }
+
   // Sets which place is the chosenPlace, makes its marker bounce, and
   // displays its infowindow.
   self.selectPlace = function(place) {
@@ -185,14 +232,23 @@ function appViewModel() {
         result.marker.setAnimation(null);
       });
       self.chosenPlace(place);
-      self.chosenPhotoIndex(0);
-      place.marker.setAnimation(google.maps.Animation.BOUNCE);
+      // self.chosenPhotoIndex(0);
+      bounceMarker(place.marker);
       self.displayInfo(place);
     }
   };
 
   // Boolean to determine whether or not to show the list view.
   self.displayingList = ko.observable(true);
+
+  // Determines which icon the button that toggles the list view will have.
+  // Based on whether or not list is currently displaying.
+  self.listToggleIcon = ko.computed(function () {
+      if (self.displayingList()) {
+          return 'fa fa-minus-square fa-2x fa-inverse';
+      }
+      return 'fa fa-plus-square fa-2x fa-inverse';
+  });
 
   // If list view is shown, hide it.  Otherwise, show it.
   self.toggleListDisplay = function () {
@@ -203,7 +259,68 @@ function appViewModel() {
     }
   };
 
+  /*
+   * Executes a getDetails request for the selected place and displays the
+   * infowindow for the place with the resulting information.
+   * @param {Object} place A PlaceResult object.
+   */
+  self.displayInfo = function (place) {
+    var request = {
+      placeId: place.place_id
+    };
+    service.getDetails(request, function (details, status) {
+      // Default values to display if getDetails fails.
+      var locName = '<h4>' + place.name + '</h4>';
+      var locAddress = '';
+      var locPhone = '';
+      var locRating = '';
+      // var locOpenHours = '';
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        if (details.website) {
+          // Add a link to the location's website in the place's name.
+          locName = '<h4><a target="_blank" href=' + details.website +
+            '>' + place.name + '</a></h4>';
+          }
+          if (details.international_phone_number) {
+            locPhone = '<p>Phone: ' + details.international_phone_number + '</p>';
+          }
+          if (details.formatted_address) {
+            locAddress = '<p>' + details.formatted_address + '</p>';
+          }
+          if (details.rating) {
+            locRating = '<p>Rating: ' + details.rating + ' / 5 </p>';
+          }
+          // var today = getDayofWeek();
+          // if (details.opening_hours &&
+          //   details.opening_hours.weekday_text) {
+          //   openHours = details.opening_hours.weekday_text[today];
+          //   openHours = openHours.replace(dateMap[today] + ':',
+          //     "Today's Hours:");
+          //   locOpenHours = '<p>' + openHours + '</p>';
+          // }
+        }
+        var content = '<div class="infowindow">' + locName + locAddress + locPhone + locRating + '</div>';
+        infowindow.setContent(content);
+        infowindow.open(map, place.marker);
+        map.panTo(place.marker.position);
+      });
+  };
+
   initialize();
+
+  // When infowindow is closed, deselect the place as chosenPlace.
+  google.maps.event.addListener(infowindow,'closeclick',function(){
+    self.chosenPlace(null);
+  });
+
+  // When the page loads, if the width is less than 650px, hide the list view
+  $(function () {
+    if ($(window).width() < 650) {
+      if (self.displayingList()) {
+        self.displayingList(false);
+      }
+    }
+  }());
 }
 
 ko.applyBindings(new appViewModel());
